@@ -25,14 +25,6 @@ locals {
       "role" : "worker"
     },
     2 : {
-      "name" : "worker02",
-      "role" : "worker"
-    }
-    3 : {
-      "name" : "worker03",
-      "role" : "worker"
-    }
-    4 : {
       "name" : "bastion",
       "role" : "bastion"
     }
@@ -53,7 +45,7 @@ data "alicloud_zones" "all_zones" {
 }
 
 data "alicloud_key_pairs" "common_key" {
-  name_regex = "widely_used_aliyun_key_pair"
+  name_regex = "andrew_id_rsa"
 }
 
 data "alicloud_images" "ubuntu_18_04" {
@@ -108,7 +100,7 @@ resource "alicloud_instance" "instance" {
   security_groups = [alicloud_security_group.default_sec_group.id]
   # availability_zone = local.instance_azone # determined by vswitch
   internet_charge_type       = "PayByTraffic"
-  internet_max_bandwidth_out = 100
+  # internet_max_bandwidth_out = 100
   vswitch_id                 = local.vswitch_z2id[local.instance_azone]
   instance_charge_type       = "PostPaid"
   key_name                   = local.ssh_key
@@ -117,6 +109,7 @@ resource "alicloud_instance" "instance" {
 
   host_name     = each.value["name"]
   instance_name = each.value["name"]
+  internet_max_bandwidth_out = each.value["role"] == "bastion" ? 100 : 0
 }
 
 output "all_instances" {
