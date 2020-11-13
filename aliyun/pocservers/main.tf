@@ -106,13 +106,13 @@ resource "alicloud_instance" "pocservers" {
   instance_name         = each.value["host_name"]
 
   provisioner "local-exec" {
-    command     = "bash ../ssh_conf.sh -a i -t ${self.host_name} -e ${self.public_ip} -i ${self.private_ip} -f pocservers"
+    command     = "bash ../../ssh_conf.sh -a i -t ${self.host_name} -e ${self.public_ip} -i ${self.private_ip} -f pocservers"
     interpreter = ["/bin/bash", "-c"]
   }
 
   provisioner "local-exec" {
     when        = destroy
-    command     = "bash ../ssh_conf.sh -a d -i ${self.private_ip} -f pocservers"
+    command     = "bash ../../ssh_conf.sh -a d -i ${self.private_ip} -f pocservers"
     interpreter = ["/bin/bash", "-c"]
   }
 }

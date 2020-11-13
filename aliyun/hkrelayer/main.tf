@@ -89,13 +89,13 @@ resource "alicloud_instance" "hkrelayer" {
     local.azone_map[var.instance["instance_type"]]]
 
   provisioner "local-exec" {
-    command     = "bash ../ssh_conf.sh -a i -t ${self.host_name} -e ${self.public_ip} -i ${self.private_ip} -f hkrelayer"
+    command     = "bash ../../ssh_conf.sh -a i -t ${self.host_name} -e ${self.public_ip} -i ${self.private_ip} -f hkrelayer"
     interpreter = ["/bin/bash", "-c"]
   }
 
   provisioner "local-exec" {
     when        = destroy
-    command     = "bash ../ssh_conf.sh -a d -i ${self.private_ip} -f hkrelayer"
+    command     = "bash ../../ssh_conf.sh -a d -i ${self.private_ip} -f hkrelayer"
     interpreter = ["/bin/bash", "-c"]
   }
 }
