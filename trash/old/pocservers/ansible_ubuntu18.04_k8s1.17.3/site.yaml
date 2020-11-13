@@ -1,0 +1,18 @@
+---
+# install k8s in zjyd clusters
+
+- name: main
+  hosts: all
+  gather_facts: yes
+
+  tasks:
+
+  - name: should install ansible apt packages
+    import_role:
+      name: ansible_pkgs
+
+  - name: do k8s install
+    tags:
+      - k8s
+    import_role:
+      name: kubernetes

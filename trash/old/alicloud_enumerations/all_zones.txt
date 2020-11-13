@@ -1,0 +1,17 @@
+[
+	{
+		"id": "cn-shenzhen-a"
+	},
+	{
+		"id": "cn-shenzhen-b"
+	},
+	{
+		"id": "cn-shenzhen-c"
+	},
+	{
+		"id": "cn-shenzhen-d"
+	},
+	{
+		"id": "cn-shenzhen-e"
+	}
+]

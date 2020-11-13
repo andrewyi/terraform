@@ -1,0 +1,23 @@
+---
+
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+localAPIEndpoint:
+  bindPort: 38091
+
+---
+
+apiVersion: kubeadm.k8s.io/v1beta2
+clusterName: "{{ cluster_name }}"
+imageRepository: registry.qzcloud.com/gcr
+kind: ClusterConfiguration
+kubernetesVersion: {{ kubernetes_version }}
+networking:
+  podSubnet: "10.244.0.0/16"
+apiServer:
+{% if public_ip is defined and public_ip != "" %}
+  certSANs:
+  - "{{ public_ip }}"
+{% endif %}
+  extraArgs:
+    service-node-port-range: "30000-39000"

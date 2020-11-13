@@ -1,0 +1,28 @@
+---
+
+- name: setup hkrelayer http proxy
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: upload trojan
+      unarchive:
+        src: ./trojan.tar.gz
+        dest: /root
+        creates: /root/trojan/trojan
+
+    - name: run trojan server
+      command:
+        argv:
+          - bash
+          - -c
+          - nohup ./trojan -c server.json > server.log 2>&1 &
+        chdir: /root/trojan
+
+    - name: run trojan client
+      command:
+        argv:
+          - bash
+          - -c
+          - nohup ./trojan -c client.json > client.log 2>&1 &
+        chdir: /root/trojan

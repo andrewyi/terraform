@@ -1,0 +1,28 @@
+[
+	{
+		"availability_zones": [
+			"cn-shenzhen-a",
+			"cn-shenzhen-c",
+			"cn-shenzhen-d",
+			"cn-shenzhen-e"
+		],
+		"burstable_instance": {
+			"baseline_credit": "0",
+			"initial_credit": "0"
+		},
+		"cpu_core_count": 2,
+		"eni_amount": 2,
+		"family": "ecs.gn5i",
+		"gpu": {
+			"amount": "1",
+			"category": "NVIDIA P4"
+		},
+		"id": "ecs.gn5i-c2g1.large",
+		"local_storage": {
+			"amount": "0",
+			"capacity": "0",
+			"category": ""
+		},
+		"memory_size": 8
+	}
+]

@@ -1,0 +1,95 @@
+- name: send kubeadm init yaml
+  template:
+    src: kubeadm_init.yaml.j2
+    dest: /root/kubeadm_init.yaml
+    force: yes
+    backup: no
+
+- name: run kubeadm init on master
+  command:
+    argv:
+      - kubeadm
+      - init
+      - --config
+      - ./kubeadm_init.yaml
+    creates: /etc/kubernetes/admin.conf
+    chdir: /root
+
+- name: ensure .kube directory exists
+  file:
+    path: /root/.kube
+    state: directory
+
+- name: setup kubectl config
+  copy:
+    remote_src: yes
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+
+- name: send cni yaml
+  copy:
+    src: kube-flannel.yml
+    dest: /root
+
+- name: apply cni
+  command:
+    argv:
+      - kubectl
+      - apply
+      - -f
+      - ./kube-flannel.yml
+    chdir: /root
+
+- name: wait until cni ready
+  shell:
+    cmd: kubectl -nkube-system get pods | grep kube-flannel
+  register: result
+  until: result.stdout.find("Running") != -1
+  retries: 100
+  delay: 10
+
+- name: untaint master node
+  command:
+    argv:
+      - kubectl
+      - taint
+      - nodes
+      - --all
+      - node-role.kubernetes.io/master-
+  ignore_errors: true
+
+- name: waits for all nodes ready (may be sleep 10 seconds after join)
+  shell:
+    cmd: kubectl get nodes
+  register: result
+  until: result.stdout.find("NotReady") == -1
+  retries: 100
+  delay: 10
+
+- name: send ingress-nginx configs
+  copy:
+    src: "{{ item }}"
+    dest: /root
+  loop:
+    - mandatory.yaml
+    - service-nodeport.yaml
+
+- name: setup ingress-nginx
+  command:
+    argv:
+      - kubectl
+      - apply
+      - -f
+      - ./{{ item }}
+    chdir: /root
+  loop:
+    - mandatory.yaml
+    - service-nodeport.yaml
+
+- name: wait until ingress-nginx ready
+  shell:
+    cmd: kubectl -ningress-nginx get pods | grep nginx-ingress
+  register: result
+  until: result.stdout.find("Running") != -1
+  retries: 100
+  delay: 10

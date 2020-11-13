@@ -1,0 +1,76 @@
+---
+# tasks file for kubernetes
+
+- name: disable swap
+  command: swapoff -a
+  changed_when: false
+
+- name: ensure swap not mounted
+  mount:
+    name: swap
+    fstype: swap
+    state: absent
+
+- name: comment out swap settings in fstab
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#\n]+\s+swap\s+sw\s+.*)$'
+    replace: '# \1'
+
+- name: add docker gpg apt Key
+  apt_key:
+    url: "{{ docker_gpg_url }}"
+    state: present
+
+- name: add docker repository
+  apt_repository:
+    repo: "{{ docker_repo }}"
+    state: present
+
+- name: update apt and install docker-ce
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+    state: present
+    update_cache: yes
+
+- name: ensure docker cgroup driver
+  copy:
+    src: etc_docker_daemon.json
+    dest: /etc/docker/daemon.json
+  notify:
+    - restart docker
+
+- name: force restart docker handler
+  meta: flush_handlers
+
+- name: add kube* gpg apt Key
+  apt_key:
+    url: "{{ kube_gpg_url }}"
+    state: present
+
+- name: add kube* repository
+  apt_repository:
+    repo: "{{ kube_repo }}"
+    state: present
+
+- name: install kube* packages
+  apt:
+    name: 
+      - kubeadm={{ kube_pkg_version }}
+      - kubelet={{ kube_pkg_version }}
+      - kubectl={{ kube_pkg_version }}
+    state:  present
+    update_cache: yes
+
+- name: enable kubelet immediately
+  systemd:
+    name: kubelet
+    state: started
+    daemon_reload: true
+    enabled: true
+
+- name: do init on master
+  import_tasks: master.yaml
+  when: "'masters' in group_names"

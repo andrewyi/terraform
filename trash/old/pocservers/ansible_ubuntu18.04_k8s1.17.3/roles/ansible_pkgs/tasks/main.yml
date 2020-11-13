@@ -1,0 +1,18 @@
+---
+# tasks file for ansible_pkgs
+
+- name: install required apt packages
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - aptitude
+      - apt-transport-https
+      - software-properties-common
+      - virtualenv
+      - python-apt
+      - python3-apt
+      - python3-setuptools
+      - python3-pip
+    state: present
+    update_cache: yes

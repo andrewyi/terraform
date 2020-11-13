@@ -1,0 +1,11 @@
+---
+# vars file for kubernetes
+
+docker_gpg_url: http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg
+docker_repo: deb http://mirrors.aliyun.com/docker-ce/linux/ubuntu bionic stable
+kube_gpg_url: http://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg
+kube_repo: deb http://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
+
+kube_pkg_version: "1.17.3-00"
+
+kubernetes_version: v1.17.3
