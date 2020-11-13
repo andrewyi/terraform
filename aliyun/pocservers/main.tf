@@ -10,11 +10,13 @@ variable "instances" {
 }
 
 terraform {
-  required_version = ">= 0.12"
-
   required_providers {
-    alicloud = ">= 1.89.0"
+    alicloud = {
+      source = "aliyun/alicloud"
+      version = "1.103.1"
+    }
   }
+  required_version = ">= 0.13"
 }
 
 provider "alicloud" {

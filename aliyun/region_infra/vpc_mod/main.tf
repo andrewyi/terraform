@@ -1,13 +1,17 @@
+terraform {
+  required_providers {
+    alicloud = {
+      source = "aliyun/alicloud"
+      version = "1.103.1"
+    }
+  }
+  required_version = ">= 0.13"
+}
+
 locals {
   zone_ids = data.alicloud_zones.zones.ids
   zone_id2ind = {
     for i in range(length(local.zone_ids)) : local.zone_ids[i] => (i + 1)
-  }
-}
-
-terraform {
-  required_providers {
-    alicloud = "1.87.0"
   }
 }
 

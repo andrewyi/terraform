@@ -47,3 +47,59 @@ export TENCENTCLOUD_SECRET_KEY=""
 
 * ```./aliyun/hkrelayer```
     * will create a socks5 proxy server hongkong (using trojan)
+
+
+### upgrade to terraform 0.13
+
+* more config: ```~/.terraformrc``` (should replace $HOME with actual path string)
+
+```
+provider_installation {
+  filesystem_mirror {
+    path    = "$HOME/.terraform.d/plugins"
+    include = ["aliyun/alicloud", "tencentcloudstack/tencentcloud"]
+  }
+  direct {
+    exclude = ["aliyun/alicloud", "tencentcloudstack/tencentcloud"]
+  }
+}
+```
+
+* plugins should be managed in structured directories
+
+```
+$HOME/.terraform.d/plugins
+└── registry.terraform.io
+    ├── aliyun
+    │   └── alicloud
+    │       └── terraform-provider-alicloud_1.103.1_linux_amd64.zip
+    └── tencentcloudstack
+        └── tencentcloud
+            └── terraform-provider-tencentcloud_1.46.4_linux_amd64.zip
+```
+
+* provider demystified
+    * the official registry is registry.terraform.io (the default namespace is hashcorp?)
+    * for provider alicloud (https://registry.terraform.io/providers/aliyun/alicloud/latest)
+        * the namespace is aliyun
+        * the type is alicloud
+
+    * for provider tencetncloud (https://registry.terraform.io/providers/tencentcloudstack/tencentcloud/latest)
+        * the namespace is tencentcloudstack
+        * the type is tencentcloud
+
+* terraform settings in .tf files:
+
+```
+terraform {
+  required_providers {
+    alicloud = {
+      source = "aliyun/alicloud"
+      version = "1.103.1"
+    }
+  }
+  required_version = ">= 0.13"
+}
+```
+
+* use ```terraform state replace-provider -- '-/alicloud' 'aliyun/alicloud'``` to correct state files

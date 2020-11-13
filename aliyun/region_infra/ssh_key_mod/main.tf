@@ -8,8 +8,12 @@ variable "key_name" {
 
 terraform {
   required_providers {
-    alicloud = "1.87.0"
+    alicloud = {
+      source = "aliyun/alicloud"
+      version = "1.103.1"
+    }
   }
+  required_version = ">= 0.13"
 }
 
 resource "alicloud_key_pair" "key_pair" {
