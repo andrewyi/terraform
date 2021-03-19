@@ -37,9 +37,11 @@ locals {
 
   itype_map = {
     "t6" : data.alicloud_instance_types.t6.ids[0],
+    "hfc7" : data.alicloud_instance_types.hfc7.ids[0],
   }
   azone_map = {
     "t6" : data.alicloud_instance_types.t6.instance_types[0].availability_zones[0],
+    "hfc7" : data.alicloud_instance_types.hfc7.instance_types[0].availability_zones[0],
   }
 }
 
@@ -74,6 +76,15 @@ data "alicloud_security_groups" "default_group" {
 
 data "alicloud_vswitches" "switches" {
   vpc_id = local.vpc_id
+}
+
+data "alicloud_instance_types" "hfc7" {
+  // 0.942 /时
+  cpu_core_count       = 4
+  memory_size          = 8
+  instance_type_family = "ecs.hfc7"
+  instance_charge_type = "PostPaid"
+  network_type         = "Vpc"
 }
 
 data "alicloud_instance_types" "t6" {
