@@ -14,10 +14,10 @@ terraform {
   required_providers {
     tencentcloud = {
       source  = "tencentcloudstack/tencentcloud"
-      version = "1.46.4"
+      version = "1.53.8"
     }
   }
-  required_version = ">= 0.13"
+  required_version = "= 0.14.8"
 }
 
 provider "tencentcloud" {
@@ -127,7 +127,7 @@ output "all_instances" {
 output "all_instances" {
   value = {
     "hostname": tencentcloud_instance.myneighbour.hostname,
-    "publi_ip": tencentcloud_instance.myneighbour.public_ip,
+    "public_ip": tencentcloud_instance.myneighbour.public_ip,
     "private_ip": tencentcloud_instance.myneighbour.private_ip
   }
 }
